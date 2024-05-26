@@ -10,7 +10,7 @@ public class OpenApiConfig {
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
                 .group("spring")
-                .packagesToScan("com.example") // Your base package
+                .packagesToScan("com.example")
                 .build();
     }
 }

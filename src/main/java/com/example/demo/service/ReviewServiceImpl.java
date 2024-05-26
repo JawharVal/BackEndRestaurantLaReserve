@@ -18,7 +18,7 @@ public class ReviewServiceImpl implements ReviewService {
     private ReviewRepository reviewRepository;
 
     @Autowired
-    private UserService userService;  // Correct handling of User entity, not DTO
+    private UserService userService;
 
     @Override
     public ReviewDTO createReview(ReviewDTO reviewDto) {
@@ -39,7 +39,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     private Review convertToEntity(ReviewDTO reviewDto) {
-        User user = userService.getUserEntityById(reviewDto.getUserId()); // Make sure getUserById returns User, not UserDTO
+        User user = userService.getUserEntityById(reviewDto.getUserId());
         Review review = new Review();
         review.setUser(user);
         review.setFoodRating(reviewDto.getFoodRating());
@@ -89,6 +89,6 @@ public class ReviewServiceImpl implements ReviewService {
         review.setValueForMoneyRating(reviewDto.getValueForMoneyRating());
         review.setCleanlinessRating(reviewDto.getCleanlinessRating());
         review.setComments(reviewDto.getComments());
-        // Optionally update other fields as necessary
+
     }
 }

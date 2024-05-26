@@ -12,6 +12,6 @@ public interface ReviewService {
 
     ReviewDTO convertToDto(Review review);
     void deleteReview(Long id);
-    List<ReviewDTO> getAllReviews();  // Add this method to fetch all reviews
+    List<ReviewDTO> getAllReviews();
     ReviewDTO updateReview(Long id, ReviewDTO reviewDto);
 }

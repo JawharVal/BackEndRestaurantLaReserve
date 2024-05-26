@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
@@ -19,10 +18,9 @@ public class RestaurantServiceImpl implements RestaurantService {
     private RestaurantRepository restaurantRepository;
 
     @Autowired
-    private LocationRepository locationRepository; // Autowire the LocationRepository
+    private LocationRepository locationRepository;
 
 
-    // Method to convert Restaurant to RestaurantDTO
     private RestaurantDTO convertToDTO(Restaurant restaurant) {
         RestaurantDTO restaurantDTO = new RestaurantDTO();
         restaurantDTO.setId(restaurant.getId());

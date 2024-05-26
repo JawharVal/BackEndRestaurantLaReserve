@@ -4,12 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -41,12 +39,12 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/auth/**").permitAll()         // Allow everyone to access authentication endpoints
+                .antMatchers("/api/auth/**").permitAll()
            // Allow everyone to access contact page
                 .antMatchers("/api/homePages").permitAll()
                 .antMatchers("/api/homePage").permitAll()
-                .antMatchers("/api/homePage/**").permitAll() // Allow everyone to access home pages
-                .antMatchers("/api/menuItems/section/{section}").permitAll()       // Allow everyone to access menu items
+                .antMatchers("/api/homePage/**").permitAll()
+                .antMatchers("/api/menuItems/section/{section}").permitAll()
                 .antMatchers("/subscribe").permitAll()
                 .antMatchers("/admin/**").permitAll()
                 .antMatchers("/api/cities/**").permitAll()

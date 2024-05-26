@@ -14,8 +14,6 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private List<Booking> bookings;
 
-
-    // Getters and setters
     public Long getId() {
         return id;
     }

@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import com.example.demo.config.JWTGenerator;
 import com.example.demo.dto.UserDTO;
-import com.example.demo.model.Subscriber;
 import com.example.demo.model.User;
 import com.example.demo.repositories.SubscriberRepository;
 import com.example.demo.repositories.UserRepository;
@@ -10,10 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -100,7 +97,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return new UserDTO(user.getId(), user.getEmail(),
                 user.getUsername(), user.getPassword(),
-                user.getCity(),user.getRegion(),user.getRole()); // Password is not included for security
+                user.getCity(),user.getRegion(),user.getRole());
     }
     public User getUserEntityById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
@@ -156,6 +153,6 @@ public class UserServiceImpl implements UserService {
 
         return new UserDTO(user.getId(), user.getEmail(),
                 user.getUsername(), user.getPassword(),
-                user.getCity(),user.getRegion(),user.getRole()); // Avoid returning the password
+                user.getCity(),user.getRegion(),user.getRole());
     }
 }

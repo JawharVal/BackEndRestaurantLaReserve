@@ -16,13 +16,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -128,7 +126,7 @@ public class UserController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String token = jwtGenerator.generateToken(authentication);  // Ensure this method includes the role in the token
+        String token = jwtGenerator.generateToken(authentication);
 
         AuthResponseDTO response = new AuthResponseDTO();
         response.setAccessToken(token);
@@ -145,19 +143,16 @@ public class UserController {
     public ResponseEntity<?> getUserProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication.getName().equals("anonymousUser")) {
-            // Return an error response or prompt for authentication
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication is required");
         }
-        String email = authentication.getName(); // The email should be the username set by Spring Security
+        String email = authentication.getName();
         System.out.println("Email from Authentication: " + email);
         UserDTO userDTO = userService.getUserByEmail(email);
 
-        // Get the user's bookings
         List<Booking> bookings = bookingService.getBookingsByUserEmail(email);
 
-        // Convert the bookings to BookingDTOs and set them in the UserDTO
         List<BookingDTO> bookingDTOs = bookings.stream()
-                .map(booking -> convertToDTO(booking)) // You'll need to implement this method
+                .map(booking -> convertToDTO(booking))
                 .collect(Collectors.toList());
         userDTO.setBookings(bookingDTOs);
 
@@ -179,16 +174,9 @@ public class UserController {
     @Operation(summary = "Logout", description = "Logs out the currently authenticated user.")
     @ApiResponse(responseCode = "200", description = "User logged out successfully")
     public ResponseEntity<?> logoutUser(HttpServletRequest request, HttpServletResponse response) {
-        // Since we cannot truly "invalidate" a JWT, we simply clear the security context
         SecurityContextHolder.clearContext();
-
-        // Optionally, you can implement token blacklisting here if your application has that capability
-        // This would involve storing the token in a list of revoked tokens and checking against it on each request
-
-        // Inform client to clear the token
         return ResponseEntity.ok().body("Logged out successfully");
     }
-
 }
 
 

@@ -1,9 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.BookingDTO;
 import com.example.demo.dto.MenuItemDto;
 import com.example.demo.service.BookingService;
-import com.example.demo.service.EmailService;
 import com.example.demo.service.MenuItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/menuItems") // Updated to match the API base path and resource
+@RequestMapping("/api/menuItems")
 public class MenuController {
 
     private final MenuItemService menuItemService;
@@ -30,7 +28,6 @@ public class MenuController {
         this.menuItemService = menuItemService;
     }
 
-    // Retrieve a single menu item by ID
     @GetMapping("/{id}")
     @Operation(summary = "Retrieve a single menu item by ID", description = "Retrieves a menu item by its ID along with booking details.")
     @ApiResponse(responseCode = "200", description = "Menu item retrieved successfully",
@@ -46,8 +43,6 @@ public class MenuController {
         }
     }
 
-    // Retrieve all menu items by section
-    // Retrieve all menu items by section and optional category
     @GetMapping("/section/{section}")
     @Operation(summary = "Retrieve all menu items by section", description = "Retrieves all menu items by their section and optional category.")
     @ApiResponse(responseCode = "200", description = "Menu items retrieved successfully",
@@ -77,7 +72,6 @@ public class MenuController {
         }
     }
 
-    // Add a new menu item
     @PostMapping
     @Operation(summary = "Add a new menu item", description = "Creates a new menu item with a category.")
     @ApiResponse(responseCode = "201", description = "Menu item created successfully",
@@ -88,8 +82,6 @@ public class MenuController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newMenuItem);
     }
 
-
-    // Update an existing menu item
     @PutMapping("/{id}")
     @Operation(summary = "Update an existing menu item", description = "Updates an existing menu item by its ID, including its category.")
     @ApiResponse(responseCode = "200", description = "Menu item updated successfully",
@@ -105,7 +97,6 @@ public class MenuController {
         }
     }
 
-    // Delete a menu item
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a menu item", description = "Deletes a menu item by its ID.")
     @ApiResponse(responseCode = "204", description = "Menu item deleted successfully")
@@ -115,9 +106,7 @@ public class MenuController {
             menuItemService.deleteMenuItem(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
-            return ResponseEntity.notFound().build(); // Assuming deletion can fail if id not found
+            return ResponseEntity.notFound().build();
         }
     }
-
-
 }

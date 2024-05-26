@@ -24,12 +24,12 @@ public class ContactController {
 
     private final JavaMailSender mailSender;
     private final ContactFormService contactFormService;
-    private final UserService userService; // Ensure you inject UserService
+    private final UserService userService;
     private static final Logger logger = LoggerFactory.getLogger(ContactController.class);
     public ContactController(JavaMailSender mailSender, ContactFormService contactFormService, UserService userService) {
         this.mailSender = mailSender;
         this.contactFormService = contactFormService;
-        this.userService = userService; // Initialize userService
+        this.userService = userService;
     }
 
     @PostMapping("/contact")

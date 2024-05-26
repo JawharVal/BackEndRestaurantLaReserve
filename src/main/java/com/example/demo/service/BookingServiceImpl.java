@@ -11,7 +11,6 @@ import com.example.demo.repositories.RestaurantRepository;
 import com.example.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.util.LinkedHashMap;
@@ -30,17 +29,19 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Autowired
-    private UserRepository userRepository; // Assuming you have this from your UserService
+    private UserRepository userRepository;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
-    private EmailService emailService; // You'll need to create this service to handle email sending
+    private EmailService emailService;
     @Transactional
     public BookingDTO createBooking(BookingDTO bookingDTO, String email) {
-        // Fetching user and checking if exists
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
+        // Final availability check before creating the booking
+        if (!isSlotAvailable(bookingDTO.getDate(), bookingDTO.getTime())) {
+            throw new RuntimeException("The selected time slot is no longer available.");
+        }
         Booking booking = new Booking();
         booking.setUser(user);
         booking.setDate(bookingDTO.getDate());
@@ -51,35 +52,32 @@ public class BookingServiceImpl implements BookingService {
         booking.setComment(bookingDTO.getComment());
 
         if (bookingDTO.getRestaurantId() != null) {
-            Integer restaurantId = bookingDTO.getRestaurantId().intValue(); // Convert Long to Integer
+            Integer restaurantId = bookingDTO.getRestaurantId().intValue();
             Restaurant restaurant = restaurantRepository.findById(restaurantId)
                     .orElseThrow(() -> new RuntimeException("Restaurant not found"));
             booking.setRestaurant(restaurant);
         }
-        // Only set the category if categoryId is not null
+
         if (bookingDTO.getCategoryId() != null) {
             Category category = categoryRepository.findById(bookingDTO.getCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category not found"));
             booking.setCategory(category);
         }
-
+        sendBookingConfirmation(email,booking);
 
         booking = bookingRepository.save(booking);
         return convertToDTO(booking);
     }
 
-
-
     @Override
     @Transactional
     public BookingDTO createBookingForUser(Long userId, String userEmail, BookingDTO bookingDTO) {
         try {
-            // Retrieve user's email by ID
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("User not found"));
             Category category = categoryRepository.findById(bookingDTO.getCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category not found"));
-            // Create a new booking
+
             Booking booking = new Booking();
             booking.setDate(bookingDTO.getDate());
             booking.setTime(bookingDTO.getTime());
@@ -96,22 +94,17 @@ public class BookingServiceImpl implements BookingService {
                 booking.setRestaurant(restaurant);
             }
 
-            // Save the booking to the database
             booking = bookingRepository.save(booking);
 
-            // Send email notification
             String subject = "Booking Confirmation";
             String message = "Your booking has been successfully created. Booking ID: " + booking.getId();
             emailService.sendEmail(userEmail, subject, message);
 
-            // Convert the entity back to DTO
             return convertToDTO(booking);
         } catch (Exception e) {
-            // Handle any errors
             throw new RuntimeException("Failed to create booking", e);
         }
     }
-
 
     @Override
     public BookingDTO getBookingById(Long id) {
@@ -131,21 +124,18 @@ public class BookingServiceImpl implements BookingService {
                         .orElseThrow(() -> new RuntimeException("Category not found"));
                 booking.setCategory(category);
             } else {
-                booking.setCategory(null);  // Explicitly set category to null if no category selected
+                booking.setCategory(null);
             }
 
-            // Update restaurant if provided
             if (bookingDTO.getRestaurantId() != null) {
-                Integer restaurantId = bookingDTO.getRestaurantId().intValue();  // Convert Long to Integer
+                Integer restaurantId = bookingDTO.getRestaurantId().intValue();
                 Restaurant restaurant = restaurantRepository.findById(restaurantId)
                         .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
                 booking.setRestaurant(restaurant);
             } else {
-                booking.setRestaurant(null);  // Explicitly set restaurant to null if no restaurant selected
+                booking.setRestaurant(null);
             }
-            // Update booking details
 
-            // Update the booking details
             booking.setDate(bookingDTO.getDate());
             booking.setTime(bookingDTO.getTime());
             booking.setNumberOfPersons(bookingDTO.getNumberOfPersons());
@@ -153,14 +143,9 @@ public class BookingServiceImpl implements BookingService {
             booking.setLastName(bookingDTO.getLastName());
             booking.setComment(bookingDTO.getComment());
 
-            // Only update the category if categoryId is not null
-
             booking = bookingRepository.save(booking);
 
-            // Retrieve user's email from the booking or associated user entity
-            String userEmail = booking.getUser().getEmail(); // Assuming user is associated with booking
-
-            // Send notification email
+            String userEmail = booking.getUser().getEmail();
             String subject = "Booking Update";
             String message = "Your booking has been updated. Booking ID: " + booking.getId();
             emailService.sendEmail(userEmail, subject, message);
@@ -170,7 +155,6 @@ public class BookingServiceImpl implements BookingService {
             throw new RuntimeException("Failed to update booking", e);
         }
     }
-
 
     @Override
     public List<BookingDTO> getBookingsByUserId(Long userId) {
@@ -188,18 +172,16 @@ public class BookingServiceImpl implements BookingService {
         dto.setLastName(booking.getLastName());
         dto.setComment(booking.getComment());
         if (booking.getRestaurant() != null) {
-            dto.setRestaurantId((long) booking.getRestaurant().getId());  // Cast int to Long
+            dto.setRestaurantId((long) booking.getRestaurant().getId());
         }
         if (booking.getCategory() != null) {
-            dto.setCategoryId(booking.getCategory().getId());  // Set Category ID
+            dto.setCategoryId(booking.getCategory().getId());
         }
         return dto;
     }
 
-
-
     private Map<String, Integer> initializeAvailability() {
-        return IntStream.rangeClosed(9, 16) // assuming the times are 9-16 inclusive
+        return IntStream.rangeClosed(9, 16)
                 .boxed()
                 .collect(Collectors.toMap(
                         hour -> String.format("%02d:00", hour),
@@ -211,14 +193,13 @@ public class BookingServiceImpl implements BookingService {
                 ));
     }
 
-
     public boolean hasExistingBooking(String email, String date) {
         Optional<User> user = userRepository.findByEmail(email);
         if (!user.isPresent()) {
             throw new RuntimeException("User not found");
         }
         List<Booking> bookings = bookingRepository.findByUserAndDate(user.get(), date);
-        return !bookings.isEmpty(); // True if there are existing bookings
+        return !bookings.isEmpty();
     }
 
     public boolean isSlotAvailable(String date, String time) {
@@ -233,7 +214,6 @@ public class BookingServiceImpl implements BookingService {
                 + "Thank you for choosing our service.\n\n"
                 + "Best regards,\nYour Booking Team";
 
-        // Send email using the EmailService
         try {
             emailService.sendEmail(userEmail, subject, body);
         } catch (MessagingException e) {
@@ -266,14 +246,12 @@ public class BookingServiceImpl implements BookingService {
                 + "Thank you,\nYour Booking Team";
         try {
             emailService.sendEmail(userEmail, subject, body);
-            // Optionally, send a notification to the admin as well
-            emailService.sendEmail("jawharstrike35@gmail.com", subject, body);  // admin@example.com should be replaced by the actual admin email from application.properties
+            emailService.sendEmail("jawharstrike35@gmail.com", subject, body);
         } catch (MessagingException e) {
             throw new RuntimeException("Failed to send booking cancellation email", e);
         }
     }
-    // Method to get the availability of time slots for a given date
-// BookingServiceImpl.java
+
     public Map<String, Integer> getAvailabilityForDate(String date) {
         List<Object[]> bookingsCount = bookingRepository.countBookingsByDateGroupedByTime(date);
         Map<String, Integer> availability = initializeAvailability();
@@ -286,8 +264,5 @@ public class BookingServiceImpl implements BookingService {
 
         return availability;
     }
-
-    // BookingServiceImpl.java
-
 }
 

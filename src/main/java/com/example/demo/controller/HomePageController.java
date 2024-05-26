@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api") // Ensuring the same base route for comparison
+@RequestMapping("/api")
 public class HomePageController {
 
     private final HomePageService service;
@@ -31,9 +31,9 @@ public class HomePageController {
     public ResponseEntity<List<HomePageDto>> getHomePages() {
         List<HomePageDto> homePageDtos = service.getHomePages();
         if (homePageDtos != null && !homePageDtos.isEmpty()) {
-            return ResponseEntity.ok(homePageDtos); // Returning OK response with data
+            return ResponseEntity.ok(homePageDtos);
         } else {
-            return ResponseEntity.noContent().build(); // Returning no content if list is empty
+            return ResponseEntity.noContent().build();
         }
     }
 
@@ -46,9 +46,9 @@ public class HomePageController {
     public ResponseEntity<HomePageDto> updateHomePage(@PathVariable Long id, @RequestBody HomePageDto updatedHomePageDto) {
         HomePageDto updatedHomePage = service.updateHomePage(updatedHomePageDto);
         if (updatedHomePage != null) {
-            return ResponseEntity.ok(updatedHomePage); // Returning OK response with updated data
+            return ResponseEntity.ok(updatedHomePage);
         } else {
-            return ResponseEntity.notFound().build(); // If no entity was found to update
+            return ResponseEntity.notFound().build();
         }
     }
 

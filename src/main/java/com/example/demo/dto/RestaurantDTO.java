@@ -22,7 +22,6 @@ public class RestaurantDTO {
 
     private Set<Long> bookingIds;
 
-    // Constructors, Getters, and Setters
     public RestaurantDTO() {
     }
 
@@ -34,7 +33,6 @@ public class RestaurantDTO {
         this.capacity = capacity;
     }
 
-    // Standard getters and setters
     public int getId() {
         return id;
     }

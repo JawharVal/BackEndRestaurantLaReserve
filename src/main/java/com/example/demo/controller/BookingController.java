@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.BookingDTO;
-import com.example.demo.dto.MenuItemDto;
 import com.example.demo.dto.UserDTO;
 import com.example.demo.service.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,16 +20,13 @@ import java.util.Map;
 @RequestMapping("/api/auth/bookings")
 public class BookingController {
     @Autowired
-    private BookingServiceImpl bookingService; // Changed from BookingService to BookingServiceImpl
+    private BookingServiceImpl bookingService;
 
     @Autowired
     private UserService userService;
 
     @Autowired
     private EmailService emailService;
-
-    @Autowired
-    private MenuItemService menuItemService;
 
     @PostMapping
     @Operation(summary = "Create a new booking")
@@ -41,7 +35,7 @@ public class BookingController {
                     schema = @Schema(implementation = BookingDTO.class)))
     public ResponseEntity<BookingDTO> createBooking(@RequestBody BookingDTO bookingDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName(); // Ensure that you handle authentication properly.
+        String email = authentication.getName();
 
         BookingDTO newBooking = bookingService.createBooking(bookingDTO, email);
         return new ResponseEntity<>(newBooking, HttpStatus.CREATED);
@@ -56,9 +50,8 @@ public class BookingController {
         if (auth == null || !auth.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
         try {
-            bookingService.deleteBooking(id); // Implement this method in your service
+            bookingService.deleteBooking(id);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting booking");
@@ -73,14 +66,11 @@ public class BookingController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error, failed to create booking")
     public ResponseEntity<?> createBookingForUser(@PathVariable Long userId, @RequestBody BookingDTO bookingDTO) {
         try {
-            // Get the user's email based on userId
             UserDTO userDTO = userService.getUserById(userId);
             String userEmail = userDTO.getEmail();
 
-            // Create booking for the user
             BookingDTO createdBooking = bookingService.createBookingForUser(userId, userEmail, bookingDTO);
 
-            // Send email notification
             String subject = "Booking Confirmation";
             String message = "Your booking has been successfully created. Booking ID: " + createdBooking.getId();
             emailService.sendEmail(userEmail, subject, message);
@@ -90,8 +80,6 @@ public class BookingController {
             return new ResponseEntity<>("Failed to create booking: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 
     @PutMapping("/{id}")
     @Operation(summary = "Update an existing booking", description = "Updates a booking based on the booking ID provided.")
@@ -108,10 +96,6 @@ public class BookingController {
         }
     }
 
-
-
-
-
     @GetMapping("/{id}")
     @Operation(summary = "Get booking by ID", description = "Retrieve a specific booking by its ID.")
     @ApiResponse(responseCode = "200", description = "Booking found",
@@ -127,8 +111,6 @@ public class BookingController {
         }
     }
 
-
-    // New endpoint to fetch bookings by user ID
     @GetMapping("/user/{userId}")
     @Operation(summary = "Get bookings by user ID", description = "Fetch all bookings for a specific user.")
     @ApiResponse(responseCode = "200", description = "Bookings retrieved successfully",
@@ -143,6 +125,7 @@ public class BookingController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
     @GetMapping("/check-availability")
     @Operation(summary = "Check availability", description = "Check availability for a specific date.")
     @ApiResponse(responseCode = "200", description = "Availability information retrieved successfully")

@@ -40,7 +40,6 @@ public class SubscriberServiceImpl implements SubscriberService {
             throw new EmailAlreadyExistsException("Эл. адрес уже существует");
         }
 
-        // generate unique promo code
         String promoCode;
         do {
             promoCode = generatePromoCode();
@@ -115,7 +114,7 @@ public class SubscriberServiceImpl implements SubscriberService {
     public Optional<Subscriber> findSubscriberByEmail(String email) {
         return subscriberRepository.findById(email);
     }
-    @Scheduled(cron = "0 0 0 1 * ?")  // runs at 00:00:00 on the 1st day of every month
+    @Scheduled(cron = "0 0 0 1 * ?")
     public void sendMonthlyEmails() {
         List<Subscriber> subscribers = subscriberRepository.findAll();
         for (Subscriber subscriber : subscribers) {

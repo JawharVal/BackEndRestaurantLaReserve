@@ -4,7 +4,6 @@ import com.example.demo.dto.BookingDTO;
 import com.example.demo.dto.CategoryDTO;
 import com.example.demo.dto.MenuItemDto;
 import com.example.demo.dto.UserDTO;
-import com.example.demo.model.Booking;
 import com.example.demo.service.BookingService;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.MenuItemService;
@@ -20,10 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/admin")
@@ -78,7 +74,7 @@ public class AdminController {
     @ApiResponse(responseCode = "500", description = "Internal Server Error, failed to retrieve bookings")
     public ResponseEntity<List<BookingDTO>> getUserBookings(@PathVariable Long userId) {
         try {
-            List<BookingDTO> bookings = bookingService.getBookingsByUserId(userId);  // Use the injected service
+            List<BookingDTO> bookings = bookingService.getBookingsByUserId(userId);
             return ResponseEntity.ok(bookings);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -139,7 +135,7 @@ public class AdminController {
             return ResponseEntity.badRequest().body(null);
         }
     }
-    // POST - Create a new category
+
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/categories")
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO) {
@@ -151,7 +147,7 @@ public class AdminController {
         }
     }
 
-    // PUT - Update an existing category
+
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/categories/{id}")
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
@@ -163,7 +159,7 @@ public class AdminController {
         }
     }
 
-    // DELETE - Delete a category
+
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/categories/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
@@ -178,7 +174,6 @@ public class AdminController {
     }
 
 
-    // GET - Get all categories
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/categories")
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
@@ -189,7 +184,7 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-    // POST - Create a new menu item
+
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/menuItems")
     public ResponseEntity<MenuItemDto> createMenuItem(@RequestBody MenuItemDto menuItemDto) {
@@ -201,7 +196,7 @@ public class AdminController {
         }
     }
 
-    // PUT - Update an existing menu item
+
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PutMapping("/menuItems/{id}")
     public ResponseEntity<MenuItemDto> updateMenuItem(@PathVariable Long id, @RequestBody MenuItemDto menuItemDto) {
@@ -213,7 +208,6 @@ public class AdminController {
         }
     }
 
-    // DELETE - Delete a menu item
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @DeleteMapping("/menuItems/{id}")
     public ResponseEntity<Void> deleteMenuItem(@PathVariable Long id) {
@@ -225,7 +219,6 @@ public class AdminController {
         }
     }
 
-    // GET - Get all menu items
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/menuItems")
     public ResponseEntity<List<MenuItemDto>> getAllMenuItems() {
@@ -236,6 +229,4 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-
-
 }

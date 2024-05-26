@@ -22,7 +22,7 @@ public class BookingDTO {
         this.restaurantId = restaurantId;
     }
 
-    private Long userId;  // User
+    private Long userId;
     private String comment;
     private Long restaurantId;
     public Long getId() {

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 @RestController
 @RequestMapping("/api/locations")
-public class LocationController {
+public class  LocationController {
     @Autowired
     private LocationService locationService;
 

@@ -1,10 +1,8 @@
 package com.example.demo.controller;
 import com.example.demo.model.City;
-import com.example.demo.model.Country;
 import com.example.demo.service.CityService;
 import com.example.demo.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,5 +1,4 @@
 package com.example.demo.service;
-import com.example.demo.model.Booking;
 
 import com.example.demo.dto.MenuItemDto;
 import com.example.demo.model.Category;
@@ -7,7 +6,6 @@ import com.example.demo.model.MenuItem;
 import com.example.demo.repositories.CategoryRepository;
 import org.springframework.stereotype.Service;
 import com.example.demo.repositories.MenuItemRepository;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,8 +44,8 @@ public class MenuItemServiceImpl implements MenuItemService {
         menuItem.setName(menuItemDto.getName());
         menuItem.setDescription(menuItemDto.getDescription());
         menuItem.setPrice(menuItemDto.getPrice());
-        menuItem.setImageUrl(menuItemDto.getImageUrl()); // Existing line
-        menuItem.setSection(menuItemDto.getSection()); // Add this line
+        menuItem.setImageUrl(menuItemDto.getImageUrl());
+        menuItem.setSection(menuItemDto.getSection());
         menuItem = menuItemRepository.save(menuItem);
         return convertToDto(menuItem);
     }

@@ -36,7 +36,7 @@ public class Review {
     }
     public double calculateAverageRating() {
         int totalRatings = foodRating + serviceRating + ambienceRating + valueForMoneyRating + cleanlinessRating;
-        return totalRatings / 5.0; // Since there are 5 categories
+        return totalRatings / 5.0;
     }
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "UTC")
