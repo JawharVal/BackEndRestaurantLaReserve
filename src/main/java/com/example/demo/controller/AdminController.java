@@ -33,7 +33,7 @@ public class AdminController {
     private MenuItemService menuItemService;
     @Autowired
     private CategoryService categoryService;
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('admin')")
     @PostMapping("/user")
     @Operation(summary = "Add a new user", description = "Creates a new user with admin privileges.",
             security = @SecurityRequirement(name = "ROLE_ADMIN"))
@@ -50,7 +50,7 @@ public class AdminController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('admin')")
     @DeleteMapping("/user/{id}")
     @Operation(summary = "Delete a user", description = "Deletes a user by their ID.",
             security = @SecurityRequirement(name = "ROLE_ADMIN"))
@@ -64,7 +64,7 @@ public class AdminController {
             return ResponseEntity.notFound().build();
         }
     }
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/user/{userId}/bookings")
     @Operation(summary = "Get bookings by user ID", description = "Retrieves all bookings for a specific user.",
             security = @SecurityRequirement(name = "ROLE_ADMIN"))
@@ -81,7 +81,7 @@ public class AdminController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/user/{id}")
     @Operation(summary = "Get user by ID", description = "Retrieves a user by their ID.",
             security = @SecurityRequirement(name = "ROLE_ADMIN"))
@@ -95,7 +95,7 @@ public class AdminController {
 
 
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('admin')")
     @PutMapping("/user/{id}")
     @Operation(summary = "Edit user details", description = "Updates user details for the specified user ID.",
             security = @SecurityRequirement(name = "ROLE_ADMIN"))
@@ -111,7 +111,7 @@ public class AdminController {
             return ResponseEntity.notFound().build();
         }
     }
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('admin')")
     @PutMapping("/users/{userId}/role")
     @Operation(summary = "Update user role", description = "Updates the role of a user based on the user ID.",
             security = @SecurityRequirement(name = "ROLE_ADMIN"))
@@ -120,7 +120,7 @@ public class AdminController {
         userService.updateUserRole(userId, newRole);
         return ResponseEntity.ok().build();
     }
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/users")
     @Operation(summary = "Get all users", description = "Retrieves all users.",
             security = @SecurityRequirement(name = "ROLE_ADMIN"))
@@ -136,7 +136,7 @@ public class AdminController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('admin')")
     @PostMapping("/categories")
     public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO) {
         try {
@@ -148,7 +148,7 @@ public class AdminController {
     }
 
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('admin')")
     @PutMapping("/categories/{id}")
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
         try {
@@ -160,7 +160,7 @@ public class AdminController {
     }
 
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('admin')")
     @DeleteMapping("/categories/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
         try {
@@ -174,7 +174,7 @@ public class AdminController {
     }
 
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/categories")
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         try {
@@ -185,7 +185,7 @@ public class AdminController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('admin')")
     @PostMapping("/menuItems")
     public ResponseEntity<MenuItemDto> createMenuItem(@RequestBody MenuItemDto menuItemDto) {
         try {
@@ -197,7 +197,7 @@ public class AdminController {
     }
 
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('admin')")
     @PutMapping("/menuItems/{id}")
     public ResponseEntity<MenuItemDto> updateMenuItem(@PathVariable Long id, @RequestBody MenuItemDto menuItemDto) {
         try {
@@ -208,7 +208,7 @@ public class AdminController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('admin')")
     @DeleteMapping("/menuItems/{id}")
     public ResponseEntity<Void> deleteMenuItem(@PathVariable Long id) {
         try {
@@ -219,7 +219,7 @@ public class AdminController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('admin')")
     @GetMapping("/menuItems")
     public ResponseEntity<List<MenuItemDto>> getAllMenuItems() {
         try {

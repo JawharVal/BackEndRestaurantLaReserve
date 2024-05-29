@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -46,7 +47,7 @@ public class SecurityConfig {
                 .antMatchers("/api/homePage/**").permitAll()
                 .antMatchers("/api/menuItems/section/{section}").permitAll()
                 .antMatchers("/subscribe").permitAll()
-                .antMatchers("/admin/**").permitAll()
+                .antMatchers("/admin/**").hasAuthority("admin")
                 .antMatchers("/api/cities/**").permitAll()
                 .antMatchers("/api/countries/**").permitAll()
                 .antMatchers("/reviews/**").permitAll()
@@ -55,8 +56,8 @@ public class SecurityConfig {
                 .antMatchers("/api/categories/**").permitAll()
                 .antMatchers("/contact/**").permitAll()
                 .antMatchers("/api/restaurants/**").permitAll()
-                .antMatchers("/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/**", "/webjars/**").permitAll()
-                .anyRequest().permitAll()
+                .antMatchers("/swagger-ui.html/**", "/v3/api-docs/**", "/swagger-ui/**", "/webjars/**").authenticated()
+                .anyRequest().authenticated()
                 .and()
                 .httpBasic();
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
