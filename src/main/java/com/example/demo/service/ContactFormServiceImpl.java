@@ -22,7 +22,6 @@ public class ContactFormServiceImpl implements ContactFormService {
     public void saveContactForm(ContactFormDTO contactFormDTO) {
         User user = null;
 
-        // Check if user ID is provided
         if (contactFormDTO.getUserId() != null) {
             user = userRepository.findById(contactFormDTO.getUserId())
                     .orElseThrow(() -> new RuntimeException("User not found with ID: " + contactFormDTO.getUserId()));
@@ -36,10 +35,8 @@ public class ContactFormServiceImpl implements ContactFormService {
         contactForm.setSubject(contactFormDTO.getSubject());
         contactForm.setMessage(contactFormDTO.getMessage());
 
-        // Set the user for the ContactForm
         contactForm.setUser(user);
 
-        // Save the ContactForm
         contactFormRepository.save(contactForm);
     }
 

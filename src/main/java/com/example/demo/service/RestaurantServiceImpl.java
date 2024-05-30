@@ -61,7 +61,6 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setCuisine(restaurantDTO.getCuisine());
         restaurant.setCapacity(restaurantDTO.getCapacity());
 
-        // Update the location based on the locationName from DTO
         Location location = locationRepository.findByAddress(restaurantDTO.getLocationName())
                 .orElseThrow(() -> new IllegalArgumentException("Location not found with name: " + restaurantDTO.getLocationName()));
         restaurant.setLocation(location);

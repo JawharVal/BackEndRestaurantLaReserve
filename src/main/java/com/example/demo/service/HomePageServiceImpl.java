@@ -53,9 +53,8 @@ public class HomePageServiceImpl implements HomePageService {
         homePage.setDescription(String.join(",", newHomePageDto.getDescriptions()));
         homePage.setButtonTexts(String.join(",", newHomePageDto.getButtonTexts()));
         homePage.setLink(newHomePageDto.getLink());
-        // Set the user_id to 1 by default (assuming user with ID 1 always exists)
-        User defaultUser = new User();  // Assuming you have a User class
-        defaultUser.setId(1L);  // Set this ID to the user you want to associate
+        User defaultUser = new User();
+        defaultUser.setId(1L);
         homePage.setUser(defaultUser);
 
         HomePage savedHomePage = repo.save(homePage);
@@ -94,7 +93,6 @@ public class HomePageServiceImpl implements HomePageService {
         homePage.setDescription(String.join(",", updatedHomePageDto.getDescriptions()));
         homePage.setButtonTexts(String.join(",", updatedHomePageDto.getButtonTexts()));
 
-        // Set the user_id to 1 by default (assuming user with ID 1 always exists)
         User defaultUser = new User();
         defaultUser.setId(1L);
         homePage.setUser(defaultUser);

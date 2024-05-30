@@ -90,7 +90,7 @@ public class BookingDTO {
     }
 
     private Set<Long> menuItemIds = new HashSet<>();
-    // Getters and Setters
+
     private Long categoryId;
     public Long getUserId() {
         return userId;

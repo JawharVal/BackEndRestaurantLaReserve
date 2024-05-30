@@ -41,7 +41,6 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
-           // Allow everyone to access contact page
                 .antMatchers("/api/homePages").permitAll()
                 .antMatchers("/api/homePage").permitAll()
                 .antMatchers("/api/homePage/**").permitAll()
